@@ -76,7 +76,9 @@
     "first_chapter": "Crear primer capítulo",
     "select_chapter": "Selecciona este capítulo...",
     "chapter_name": "Capítulo",
-    "chapter_name_placeholder": "Nombre (ej: Estructura, Acabados, Instalaciones...)"
+    "chapter_name_placeholder": "Nombre (ej: Estructura, Acabados, Instalaciones...)",
+    "edit_estimate": "Editar presupuesto",
+    "estimate_updated": "Presupuesto actualizado"
   },
   "catalog": {
     "title": "Catálogo de Trabajos y Materiales",

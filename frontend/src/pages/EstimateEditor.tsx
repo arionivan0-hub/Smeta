@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Plus, Trash2, Download, GripVertical } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Download, GripVertical, Pencil } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useStore } from '../store';
-import { importExportApi } from '../services/api';
+import { importExportApi, estimatesApi } from '../services/api';
 import CatalogPanel from '../components/CatalogPanel';
 import type { CatalogItem } from '../types';
 
@@ -23,6 +23,8 @@ export default function EstimateEditor() {
   const [newChapterName, setNewChapterName] = useState('');
   const [editingField, setEditingField] = useState<{ positionId: number; field: string } | null>(null);
   const [editValue, setEditValue] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', project_name: '', client_name: '', location: '' });
 
   useEffect(() => {
     if (id) fetchEstimate(parseInt(id));
@@ -143,6 +145,30 @@ export default function EstimateEditor() {
 
   const totalPositions = useMemo(() => currentEstimate?.chapters?.reduce((s, ch) => s + ch.positions.length, 0) ?? 0, [currentEstimate?.chapters]);
 
+  const openEditModal = useCallback(() => {
+    if (currentEstimate) {
+      setEditForm({
+        name: currentEstimate.name,
+        project_name: currentEstimate.project_name || '',
+        client_name: currentEstimate.client_name || '',
+        location: currentEstimate.location || '',
+      });
+      setShowEditModal(true);
+    }
+  }, [currentEstimate]);
+
+  const handleSaveEstimate = useCallback(async () => {
+    if (!id || !editForm.name.trim()) return;
+    try {
+      await estimatesApi.update(parseInt(id), editForm);
+      await fetchEstimate(parseInt(id));
+      setShowEditModal(false);
+      toast.success(t('editor.estimate_updated'));
+    } catch {
+      toast.error(t('common.error'));
+    }
+  }, [id, editForm, fetchEstimate, t]);
+
   if (loadingStates.estimateDetail || !currentEstimate) {
     return <div className="p-8 flex items-center justify-center"><p className="text-gray-500">{t('common.loading')}</p></div>;
   }
@@ -157,13 +183,19 @@ export default function EstimateEditor() {
           <button onClick={() => navigate('/estimates')} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-lg hover:bg-slate-100">
             <ArrowLeft size={18} />
           </button>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 cursor-pointer hover:bg-slate-50 rounded-lg px-2 py-1 -mx-2 transition-colors" onClick={openEditModal}>
             <h1 className="text-[15px] font-semibold text-slate-900 truncate">{currentEstimate.name}</h1>
             <p className="text-[11px] text-slate-400 truncate">
               {currentEstimate.project_name}
               {currentEstimate.client_name && ` · ${currentEstimate.client_name}`}
+              {currentEstimate.location && ` · ${currentEstimate.location}`}
             </p>
           </div>
+          <button onClick={openEditModal}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
+            title={t('common.edit')}>
+            <Pencil size={14} />
+          </button>
           <div className="flex items-center gap-1.5">
             <button onClick={handleExportPdf}
               className="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium hover:bg-red-100 transition-colors flex items-center gap-1.5">
@@ -317,6 +349,58 @@ export default function EstimateEditor() {
                 {t('common.create')}
               </button>
               <button onClick={() => { setShowNewChapter(false); setNewChapterName(''); }}
+                className="px-4 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors">
+                {t('common.cancel')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Estimate Modal */}
+      {showEditModal && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg border border-slate-200/60">
+            <h3 className="text-base font-semibold text-slate-900 mb-5">{t('editor.edit_estimate')}</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{t('estimates.name')} *</label>
+                <input type="text" value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  autoFocus />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{t('estimates.client')}</label>
+                  <input type="text" value={editForm.client_name}
+                    onChange={(e) => setEditForm({ ...editForm, client_name: e.target.value })}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                    placeholder={t('estimates.client_name')} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{t('estimates.project')}</label>
+                  <input type="text" value={editForm.project_name}
+                    onChange={(e) => setEditForm({ ...editForm, project_name: e.target.value })}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                    placeholder={t('estimates.project_name')} />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">{t('estimates.location')}</label>
+                <input type="text" value={editForm.location}
+                  onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  placeholder={t('estimates.location_name')} />
+              </div>
+            </div>
+            <div className="flex gap-2 mt-6">
+              <button onClick={handleSaveEstimate}
+                disabled={!editForm.name.trim()}
+                className="flex-1 px-4 py-2.5 bg-blue-500 text-white rounded-xl text-sm font-medium hover:bg-blue-600 shadow-lg shadow-blue-500/25 transition-all disabled:opacity-50">
+                {t('common.save')}
+              </button>
+              <button onClick={() => setShowEditModal(false)}
                 className="px-4 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors">
                 {t('common.cancel')}
               </button>
