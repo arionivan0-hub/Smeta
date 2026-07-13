@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  smeta:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/smeta.db:/app/smeta.db
+      - ./logs:/app/logs
+    environment:
+      - DATABASE_URL=sqlite:///./smeta.db
+    restart: unless-stopped
