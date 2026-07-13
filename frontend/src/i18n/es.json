@@ -93,9 +93,16 @@
     "use": "Usar",
     "code_desc_required": "Código y descripción son requeridos",
     "item_added": "Elemento agregado",
+    "item_updated": "Elemento actualizado",
     "item_deleted": "Eliminado",
     "error_add": "Error al agregar",
-    "error_delete": "Error al eliminar"
+    "error_update": "Error al actualizar",
+    "error_delete": "Error al eliminar",
+    "confirm_delete": "Eliminar este elemento del catálogo?",
+    "add_item": "Agregar al catálogo",
+    "edit_item": "Editar elemento",
+    "items_count": "elementos en el catálogo",
+    "description_placeholder": "Descripción del trabajo o material"
   },
   "catalog_panel": {
     "catalog_tab": "Catálogo",

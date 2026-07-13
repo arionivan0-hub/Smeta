@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from typing import List
 
 from database import get_db
@@ -30,7 +30,9 @@ def create_estimate(estimate: EstimateCreate, db: Session = Depends(get_db)):
 
 @router.get("/{estimate_id}", response_model=EstimateResponse)
 def get_estimate(estimate_id: int, db: Session = Depends(get_db)):
-    estimate = db.query(Estimate).filter(Estimate.id == estimate_id).first()
+    estimate = db.query(Estimate).options(
+        selectinload(Estimate.chapters).selectinload(Chapter.positions)
+    ).filter(Estimate.id == estimate_id).first()
     if not estimate:
         raise HTTPException(status_code=404, detail="Estimate not found")
     return estimate
