@@ -160,10 +160,26 @@
     "loading": "Cargando...",
     "no_data": "No hay datos",
     "confirm": "Confirmar",
-    "success": "Éxito",
+    "success": "Exito",
     "error": "Error",
     "deleted": "Eliminado",
     "see_all": "Ver todas",
     "total": "TOTAL"
+  },
+  "settings": {
+    "title": "Configuracion",
+    "description": "Configura los datos de tu empresa para los presupuestos",
+    "company_info": "Datos de la Empresa",
+    "company_info_desc": "Estos datos apareceran en los presupuestos exportados",
+    "company_name": "Nombre de la empresa",
+    "company_name_placeholder": "Nombre de tu empresa o autonomo",
+    "nif": "NIF / CIF",
+    "address": "Direccion",
+    "phone": "Telefono",
+    "email": "Email",
+    "website": "Pagina web",
+    "preview": "Vista previa",
+    "preview_desc": "Asi aparecera en los presupuestos",
+    "saved": "Configuracion guardada"
   }
 }

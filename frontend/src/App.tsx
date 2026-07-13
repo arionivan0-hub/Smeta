@@ -8,6 +8,7 @@ const Estimates = lazy(() => import('./pages/Estimates'));
 const EstimateEditor = lazy(() => import('./pages/EstimateEditor'));
 const Catalog = lazy(() => import('./pages/Catalog'));
 const Templates = lazy(() => import('./pages/Templates'));
+const Settings = lazy(() => import('./pages/Settings'));
 
 // ============================================
 // Error logging utility
@@ -142,6 +143,7 @@ function App() {
             <Route path="estimates/:id" element={<Suspense fallback={<PageLoader />}><EstimateEditor /></Suspense>} />
             <Route path="catalog" element={<Suspense fallback={<PageLoader />}><Catalog /></Suspense>} />
             <Route path="templates" element={<Suspense fallback={<PageLoader />}><Templates /></Suspense>} />
+            <Route path="settings" element={<Suspense fallback={<PageLoader />}><Settings /></Suspense>} />
           </Route>
         </Routes>
       </Router>

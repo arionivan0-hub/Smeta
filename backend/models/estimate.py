@@ -77,3 +77,17 @@ class EstimateTemplate(Base):
     category = Column(String, default="")
     chapters_json = Column(JSON, default=list)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class CompanySettings(Base):
+    __tablename__ = "company_settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    company_name = Column(String, default="")
+    nif = Column(String, default="")
+    address = Column(String, default="")
+    phone = Column(String, default="")
+    email = Column(String, default="")
+    website = Column(String, default="")
+    logo_path = Column(String, default="")
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

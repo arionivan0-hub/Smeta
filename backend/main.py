@@ -13,6 +13,7 @@ from database import engine, Base
 from routers.estimates import router as estimates_router
 from routers.catalog import router as catalog_router
 from routers.templates import router as templates_router
+from routers.settings import router as settings_router
 from routers.import_export import router as import_export_router
 
 # ============================================
@@ -109,6 +110,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.include_router(estimates_router)
 app.include_router(catalog_router)
 app.include_router(templates_router)
+app.include_router(settings_router)
 app.include_router(import_export_router)
 
 logger.info(f"Routes loaded: {len(app.routes)} total")

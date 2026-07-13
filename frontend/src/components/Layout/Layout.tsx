@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, FileText, Package, Layers, Globe, Menu, ChevronLeft } from 'lucide-react';
+import { LayoutDashboard, FileText, Package, Layers, Settings, Globe, Menu, ChevronLeft } from 'lucide-react';
 
 export default function Layout() {
   const { t, i18n } = useTranslation();
@@ -14,6 +14,7 @@ export default function Layout() {
     { path: '/estimates', label: t('nav.estimates'), icon: FileText },
     { path: '/catalog', label: t('nav.catalog'), icon: Package },
     { path: '/templates', label: t('nav.templates'), icon: Layers },
+    { path: '/settings', label: t('nav.settings'), icon: Settings },
   ];
 
   const languages = [
