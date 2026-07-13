@@ -42,12 +42,22 @@ def delete_template(template_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{template_id}/apply")
-def apply_template(template_id: int, name: str, db: Session = Depends(get_db)):
+def apply_template(
+    template_id: int,
+    name: str,
+    client_name: str = "",
+    project_name: str = "",
+    db: Session = Depends(get_db),
+):
     template = db.query(EstimateTemplate).filter(EstimateTemplate.id == template_id).first()
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
 
-    estimate = Estimate(name=name, project_name=name)
+    estimate = Estimate(
+        name=name,
+        project_name=project_name or name,
+        client_name=client_name,
+    )
     db.add(estimate)
     db.flush()
 

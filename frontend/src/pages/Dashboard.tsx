@@ -17,6 +17,8 @@ export default function Dashboard() {
   const { estimates, loadingStates, fetchEstimates, createEstimate, templates, fetchTemplates, applyTemplate } = useStore();
   const [creating, setCreating] = useState(false);
   const [customName, setCustomName] = useState('');
+  const [clientName, setClientName] = useState('');
+  const [projectName, setProjectName] = useState('');
 
   useEffect(() => {
     fetchEstimates();
@@ -26,7 +28,11 @@ export default function Dashboard() {
   const handleQuickStart = async (templateName: string) => {
     if (templateName === '__empty__') {
       const name = customName.trim() || t('dashboard.new_estimate');
-      const est = await createEstimate({ name });
+      const est = await createEstimate({
+        name,
+        project_name: projectName.trim(),
+        client_name: clientName.trim(),
+      });
       navigate(`/estimates/${est.id}`);
       return;
     }
@@ -35,7 +41,7 @@ export default function Dashboard() {
       const template = templates.find(t => t.name === templateName);
       if (template) {
         const name = customName.trim() || templateName;
-        const result = await applyTemplate(template.id, name);
+        const result = await applyTemplate(template.id, name, clientName.trim(), projectName.trim());
         navigate(`/estimates/${result}`);
       }
     } catch {
@@ -95,11 +101,19 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <input type="text" value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder={t('dashboard.empty_name')}
-            className="flex-1 px-3.5 py-2 border border-slate-200 rounded-lg text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all" />
+            className="px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all" />
+          <input type="text" value={clientName}
+            onChange={(e) => setClientName(e.target.value)}
+            placeholder={t('dashboard.client_name')}
+            className="px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all" />
+          <input type="text" value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+            placeholder={t('dashboard.project_name')}
+            className="px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all" />
         </div>
       </div>
 

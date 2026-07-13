@@ -171,7 +171,9 @@
     "error": "Error",
     "deleted": "Eliminado",
     "see_all": "Ver todas",
-    "total": "TOTAL"
+    "total": "TOTAL",
+    "client_name": "Nombre del cliente",
+    "project_name": "Nombre del proyecto"
   },
   "settings": {
     "title": "Configuracion",

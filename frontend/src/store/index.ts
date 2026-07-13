@@ -37,7 +37,7 @@ interface AppState {
   searchCatalog: (q: string) => Promise<CatalogItem[]>;
 
   fetchTemplates: () => Promise<void>;
-  applyTemplate: (templateId: number, name: string) => Promise<number>;
+  applyTemplate: (templateId: number, name: string, clientName?: string, projectName?: string) => Promise<number>;
 
   fetchCategories: () => Promise<void>;
 }
@@ -232,9 +232,9 @@ export const useStore = create<AppState>((set, get) => ({
     }
   },
 
-  applyTemplate: async (templateId, name) => {
+  applyTemplate: async (templateId, name, clientName, projectName) => {
     try {
-      const result = await templatesApi.apply(templateId, name);
+      const result = await templatesApi.apply(templateId, name, clientName, projectName);
       await get().fetchEstimates();
       return result.estimate_id;
     } catch (e: any) {

@@ -87,8 +87,10 @@ export const templatesApi = {
   create: (data: { name: string; description?: string; category?: string; chapters_json?: any[] }) =>
     api.post<Template>('/templates/', data).then(r => r.data),
   delete: (id: number) => api.delete(`/templates/${id}`),
-  apply: (id: number, name: string) =>
-    api.post<{ estimate_id: number }>(`/templates/${id}/apply`, null, { params: { name } }).then(r => r.data),
+  apply: (id: number, name: string, clientName?: string, projectName?: string) =>
+    api.post<{ estimate_id: number }>(`/templates/${id}/apply`, null, {
+      params: { name, client_name: clientName || '', project_name: projectName || '' }
+    }).then(r => r.data),
 };
 
 export const importExportApi = {
