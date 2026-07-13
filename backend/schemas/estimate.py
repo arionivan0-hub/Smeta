@@ -15,8 +15,15 @@ class PositionBase(BaseModel):
     order: int = 0
 
 
-class PositionCreate(PositionBase):
-    chapter_id: int
+class PositionCreate(BaseModel):
+    code: str
+    description: str
+    unit: str
+    quantity: float = 0.0
+    unit_price: float = 0.0
+    total_price: float = 0.0
+    catalog_item_id: Optional[int] = None
+    order: int = 0
 
 
 class PositionUpdate(BaseModel):
@@ -45,8 +52,10 @@ class ChapterBase(BaseModel):
     order: int = 0
 
 
-class ChapterCreate(ChapterBase):
-    estimate_id: int
+class ChapterCreate(BaseModel):
+    code: str
+    name: str
+    order: int = 0
 
 
 class ChapterUpdate(BaseModel):
